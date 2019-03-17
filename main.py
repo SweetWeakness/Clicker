@@ -1,67 +1,77 @@
-
 import time
 from tkinter import *
 
 
+cnt_mes = -1
+f = open('venv/Include/info.txt', 'r')
+s = f.read()
+clicks, buy_1, buy_2, buy_3, buy_4 = map(float, s.split())
+f.close()
+
 cnt = 0
-clicks = float(0)
-buy_1 = 0
-buy_2 = 0
-buy_3 = 0
-buy_4 = 0
+clicks = float(clicks)
+
+
+def on_closing():
+    f_close = open('venv/Include/info.txt', 'w')
+    s = str(round(clicks, 1)) + " " + str(buy_1) + " " + str(buy_2) + " " + str(buy_3) + " " + str(buy_4)
+    f_close.write(s)
+    f_close.close()
+    root.destroy()
 
 
 def click():
     global clicks, buy_1
-    clicks += 1 + buy_1 * 0.1 + buy_2 + buy_3 * 0.1
+    clicks += 1 + buy_1 * 0.1 + buy_2
     count_clicks.config(text="{}".format(round(clicks, 2)))
     message.config(text="")
 
 
 def add1():
-    global buy_1, clicks
+    global buy_1, clicks, cnt_mes
+    cnt_mes = 90
     if clicks >= 20:
         buy_1 += 1
         dlt(20)
         count_clicks.config(text="{}".format(round(clicks, 1)))
-        message_speed.config(text="+{}".format(1 + buy_1 * 0.1 + buy_2 + buy_3 * 0.1))
+        message_speed.config(text="+{}".format(round(1 + buy_1 * 0.1 + buy_2, 1)))
         message.config(text="Thank you!")
     else:
         message.config(text="Not enough clicks")
 
 
 def add2():
-    global buy_2, clicks
+    global buy_2, clicks, cnt_mes
+    cnt_mes = 90
     if clicks >= 120:
         buy_2 += 1
         dlt(120)
         message.config(text="Thank you!")
-        count_clicks.config(text="{}".format(round(clicks, 1)))
-        message_speed.config(text="+{}".format(1 + buy_1 * 0.1 + buy_2 + buy_3 * 0.1))
+        message_speed.config(text="+{}".format(round(1 + buy_1 * 0.1 + buy_2, 1)))
     else:
         message.config(text="Not enough clicks")
 
 
 def add3():
-    global buy_3, clicks
+    global buy_3, clicks, cnt_mes
+    cnt_mes = 90
     if clicks >= 300:
         buy_3 += 1
         dlt(300)
         message.config(text="Thank you!")
-        message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1, 1)))
-
+        message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)))
     else:
         message.config(text="Not enough clicks")
 
 
 def add4():
-    global buy_4, clicks
+    global buy_4, clicks, cnt_mes
+    cnt_mes = 90
     if clicks >= 5000:
         buy_4 += 1
         dlt(5000)
         message.config(text="Thank you!")
-        message_auto_speed.config(text="+{}".format(round(buy_4 * 5, 1)))
-
+        message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)))
     else:
         message.config(text="Not enough clicks")
 
@@ -146,7 +156,7 @@ btn_buy3.place(x=root_w - btn_buy2_w,
 btn_buy4_h = int(root_h / 5)   # высота кнопки "купить доп клик4"
 btn_buy4_w = int((root_w - btn_click_w) / 3)  # ширина кнопки "купить доп клик4"
 btn_buy4 = Button(root,
-                  text="buy +5 autoclick",
+                  text="buy +1 autoclick",
                   background="#CA901B",
                   foreground="#000000",
                   command=add4,
@@ -179,7 +189,7 @@ message.place(x=int((root_w - btn_click_w) / 2),
               )
 # отображение скорости нажатия
 message_speed = Label(root,
-                      text="+1.0",
+                      text="+{}".format(round(buy_1 * 0.1 + buy_2 + 1, 1)),
                       font="16"
                       )
 message_speed.place(x=int((root_w - btn_click_w) / 2),
@@ -211,7 +221,7 @@ message_auto.place(x=int((root_w - btn_click_w) / 2),
 
 # отображение сообщения о скорости нажатия
 message_auto_speed = Label(root,
-                           text="+0.0",
+                           text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)),
                            font="16"
                            )
 message_auto_speed.place(x=int((root_w - btn_click_w) / 2),
@@ -220,15 +230,19 @@ message_auto_speed.place(x=int((root_w - btn_click_w) / 2),
                          width=btn_click_w
                          )
 
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 while True:
     root.update_idletasks()
     root.update()
     time.sleep(0.01)
+    if cnt_mes > 0:
+        cnt_mes -= 1
     cnt += 1
     count_clicks.config(text="{}".format(round(clicks, 2)))
-    if cnt == 10:
+    if cnt_mes == 0:
+        cnt_mes = -1
         message.config(text="")
     if cnt == 100:
         cnt = 0
-        clicks += buy_3 * 0.1 + buy_4 * 5
+        clicks += buy_3 * 0.1 + buy_4
