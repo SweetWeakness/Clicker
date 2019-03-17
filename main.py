@@ -1,3 +1,4 @@
+
 import time
 from tkinter import *
 
@@ -24,7 +25,7 @@ def add1():
         dlt(20)
         count_clicks.config(text="{}".format(round(clicks, 1)))
         message_speed.config(text="+{}".format(1 + buy_1 * 0.1 + buy_2 + buy_3 * 0.1))
-        message.config(text="Thnx m8)")
+        message.config(text="Thank you!")
     else:
         message.config(text="Not enough clicks")
 
@@ -34,7 +35,7 @@ def add2():
     if clicks >= 120:
         buy_2 += 1
         dlt(120)
-        message.config(text="Thnx m8)")
+        message.config(text="Thank you!")
         count_clicks.config(text="{}".format(round(clicks, 1)))
         message_speed.config(text="+{}".format(1 + buy_1 * 0.1 + buy_2 + buy_3 * 0.1))
     else:
@@ -46,7 +47,7 @@ def add3():
     if clicks >= 300:
         buy_3 += 1
         dlt(300)
-        message.config(text="Thnx m8)")
+        message.config(text="Thank you!")
         message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1, 1)))
 
     else:
@@ -58,7 +59,7 @@ def add4():
     if clicks >= 5000:
         buy_4 += 1
         dlt(5000)
-        message.config(text="Thnx m8)")
+        message.config(text="Thank you!")
         message_auto_speed.config(text="+{}".format(round(buy_4 * 5, 1)))
 
     else:
@@ -218,7 +219,6 @@ message_auto_speed.place(x=int((root_w - btn_click_w) / 2),
                          height=int((root_h - btn_click_h) / 10),
                          width=btn_click_w
                          )
-
 
 
 while True:
