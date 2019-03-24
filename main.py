@@ -1,77 +1,81 @@
 import time
 from tkinter import *
 
-
 cnt_mes = -1
 f = open('venv/Include/info.txt', 'r')
 s = f.read()
-clicks, buy_1, buy_2, buy_3, buy_4 = map(float, s.split())
+const_buy = 0.1
+buy = list(map(float, s.split()))
+clicks = buy[0]
+total = int(buy[5])
 f.close()
 
 cnt = 0
-clicks = float(clicks)
 
 
 def on_closing():
+    buy[0] = clicks
+    buy[5] = total
     f_close = open('venv/Include/info.txt', 'w')
-    s = str(round(clicks, 1)) + " " + str(buy_1) + " " + str(buy_2) + " " + str(buy_3) + " " + str(buy_4)
-    f_close.write(s)
+    s_tmp = str(" ".join(map(str, buy)))
+    f_close.write(s_tmp)
     f_close.close()
     root.destroy()
 
 
 def click():
-    global clicks, buy_1
-    clicks += 1 + buy_1 * 0.1 + buy_2
+    global clicks, buy, total
+    total += 1
+    clicks += 1 + buy[1] * const_buy + buy[2]
     count_clicks.config(text="{}".format(round(clicks, 2)))
     message.config(text="")
 
 
 def add1():
-    global buy_1, clicks, cnt_mes
+    global buy, clicks, cnt_mes
     cnt_mes = 90
     if clicks >= 20:
-        buy_1 += 1
+        buy[1] += 1
         dlt(20)
         count_clicks.config(text="{}".format(round(clicks, 1)))
-        message_speed.config(text="+{}".format(round(1 + buy_1 * 0.1 + buy_2, 1)))
+        message_speed.config(text="+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
         message.config(text="Thank you!")
     else:
         message.config(text="Not enough clicks")
 
 
 def add2():
-    global buy_2, clicks, cnt_mes
+    global buy, clicks, cnt_mes
     cnt_mes = 90
     if clicks >= 120:
-        buy_2 += 1
+        buy[2] += 1
         dlt(120)
         message.config(text="Thank you!")
-        message_speed.config(text="+{}".format(round(1 + buy_1 * 0.1 + buy_2, 1)))
+        message_speed.config(text="+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
     else:
         message.config(text="Not enough clicks")
 
 
 def add3():
-    global buy_3, clicks, cnt_mes
+    global buy, clicks, cnt_mes
     cnt_mes = 90
     if clicks >= 300:
-        buy_3 += 1
+        buy[3] += 1
         dlt(300)
         message.config(text="Thank you!")
-        message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)))
+        message_auto_speed.config(text="+{}".format(round(buy[3] * const_buy + buy[4], 1)))
     else:
         message.config(text="Not enough clicks")
 
 
 def add4():
-    global buy_4, clicks, cnt_mes
+    global buy, clicks, cnt_mes
     cnt_mes = 90
     if clicks >= 5000:
-        buy_4 += 1
+        buy[4] += 1
         dlt(5000)
         message.config(text="Thank you!")
-        message_auto_speed.config(text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)))
+        message_auto_speed.config(text="+{}".format(round(buy[3] * const_buy + buy[4], 1)))
     else:
         message.config(text="Not enough clicks")
 
@@ -84,15 +88,15 @@ def dlt(n):
 # само окно
 root = Tk()
 root.title("Clicker? Yes")
-main_w = root.winfo_screenwidth()    # ширина экрана
-main_h = root.winfo_screenheight()   # высота экрана
+main_w = root.winfo_screenwidth()  # ширина экрана
+main_h = root.winfo_screenheight()  # высота экрана
 root_h = int(main_h / 2)
 root_w = int(main_w / 3)
 root.geometry("{}x{}".format(root_w, root_h))
 root.resizable(False, False)
 # настройка кнопки "клик"
-btn_click_h = int(root_h / 3)   # высота кнопки "клик"
-btn_click_w = int(root_w / 3)   # ширина кнопки "клик"
+btn_click_h = int(root_h / 3)  # высота кнопки "клик"
+btn_click_w = int(root_w / 3)  # ширина кнопки "клик"
 btn_click = Button(root,
                    text="Click!",
                    background="#CA901B",
@@ -107,7 +111,7 @@ btn_click.place(x=int((root_w - btn_click_w) / 2),
                 width=btn_click_w
                 )
 # настройка кнопки "купить доп клик1"
-btn_buy1_h = int(root_h / 5)   # высота кнопки "купить доп клик1"
+btn_buy1_h = int(root_h / 5)  # высота кнопки "купить доп клик1"
 btn_buy1_w = int((root_w - btn_click_w) / 3)  # ширина кнопки "купить доп клик1"
 btn_buy1 = Button(root,
                   text="buy +0.1 per click",
@@ -117,12 +121,12 @@ btn_buy1 = Button(root,
                   )
 # расположение кнопки "купить доп клик1"
 btn_buy1.place(x=root_w - btn_buy1_w,
-               y=0,
+               y=btn_buy1_h,
                height=btn_buy1_h,
                width=btn_buy1_w
                )
 # настройка кнопки "купить доп клик2"
-btn_buy2_h = int(root_h / 5)   # высота кнопки "купить доп клик2"
+btn_buy2_h = int(root_h / 5)  # высота кнопки "купить доп клик2"
 btn_buy2_w = int((root_w - btn_click_w) / 3)  # ширина кнопки "купить доп клик2"
 btn_buy2 = Button(root,
                   text="buy +1 per click",
@@ -132,28 +136,28 @@ btn_buy2 = Button(root,
                   )
 # расположение кнопки "купить доп клик2"
 btn_buy2.place(x=root_w - btn_buy2_w,
-               y=btn_buy1_h,
+               y=btn_buy1_h * 2,
                height=btn_buy2_h,
                width=btn_buy2_w
                )
 # настройка кнопки "купить доп клик3"
-btn_buy3_h = int(root_h / 5)   # высота кнопки "купить доп клик3"
+btn_buy3_h = int(root_h / 5)  # высота кнопки "купить доп клик3"
 btn_buy3_w = int((root_w - btn_click_w) / 3)  # ширина кнопки "купить доп клик3"
 btn_buy3 = Button(root,
-                  text="buy +0.5 autoclick",
+                  text="buy +0.1 autoclick",
                   background="#CA901B",
                   foreground="#000000",
                   command=add3,
                   )
 # расположение кнопки "купить доп клик3"
 btn_buy3.place(x=root_w - btn_buy2_w,
-               y=btn_buy1_h * 2,
+               y=btn_buy1_h * 3,
                height=btn_buy3_h,
                width=btn_buy3_w
                )
 
 # настройка кнопки "купить доп клик4"
-btn_buy4_h = int(root_h / 5)   # высота кнопки "купить доп клик4"
+btn_buy4_h = int(root_h / 5)  # высота кнопки "купить доп клик4"
 btn_buy4_w = int((root_w - btn_click_w) / 3)  # ширина кнопки "купить доп клик4"
 btn_buy4 = Button(root,
                   text="buy +1 autoclick",
@@ -163,7 +167,7 @@ btn_buy4 = Button(root,
                   )
 # расположение кнопки "купить доп клик4"
 btn_buy4.place(x=root_w - btn_buy2_w,
-               y=btn_buy1_h * 3,
+               y=btn_buy1_h * 4,
                height=btn_buy3_h,
                width=btn_buy3_w
                )
@@ -189,7 +193,7 @@ message.place(x=int((root_w - btn_click_w) / 2),
               )
 # отображение скорости нажатия
 message_speed = Label(root,
-                      text="+{}".format(round(buy_1 * 0.1 + buy_2 + 1, 1)),
+                      text="+{}".format(round(buy[1] * const_buy + buy[2] + 1, 1)),
                       font="16"
                       )
 message_speed.place(x=int((root_w - btn_click_w) / 2),
@@ -217,18 +221,98 @@ message_auto.place(x=int((root_w - btn_click_w) / 2),
                    y=int((root_h - btn_click_h) * 15 / 20 + btn_click_h),
                    height=int((root_h - btn_click_h) / 10),
                    width=btn_click_w
-)
+                   )
 
 # отображение сообщения о скорости нажатия
 message_auto_speed = Label(root,
-                           text="+{}".format(round(buy_3 * 0.1 + buy_4, 1)),
+                           text="+{}".format(round(buy[3] * const_buy + buy[4], 1)),
                            font="16"
                            )
 message_auto_speed.place(x=int((root_w - btn_click_w) / 2),
-                         y=int((root_h - btn_click_h) * 17/ 20 + btn_click_h),
+                         y=int((root_h - btn_click_h) * 17 / 20 + btn_click_h),
                          height=int((root_h - btn_click_h) / 10),
                          width=btn_click_w
                          )
+# отображение "улучшения"
+message_perks = Label(root,
+                      text="Perks:",
+                      font="16"
+                      )
+message_perks.place(x=root_w - btn_buy2_w,
+                    y=0,
+                    height=btn_buy2_h,
+                    width=btn_buy2_w
+                    )
+# отображение "цена"
+message_perks = Label(root,
+                      text="Price:",
+                      font="16"
+                      )
+message_perks.place(x=root_w - btn_buy2_w * 3 // 2,
+                    y=0,
+                    height=btn_buy2_h,
+                    width=btn_buy2_w / 2
+                    )
+# отображение "20"
+message_perks_20 = Label(root,
+                         text="20",
+                         font="16"
+                         )
+message_perks_20.place(x=root_w - btn_buy2_w * 3 // 2,
+                       y=btn_buy1_h,
+                       height=btn_buy2_h,
+                       width=btn_buy2_w / 2
+                       )
+# отображение "120"
+message_perks_120 = Label(root,
+                          text="120",
+                          font="16"
+                          )
+message_perks_120.place(x=root_w - btn_buy2_w * 3 // 2,
+                        y=btn_buy1_h * 2,
+                        height=btn_buy2_h,
+                        width=btn_buy2_w / 2
+                        )
+# отображение "300"
+message_perks_300 = Label(root,
+                          text="300",
+                          font="16"
+                          )
+message_perks_300.place(x=root_w - btn_buy2_w * 3 // 2,
+                        y=btn_buy1_h * 3,
+                        height=btn_buy2_h,
+                        width=btn_buy2_w / 2
+                        )
+# отображение "300"
+message_perks_5000 = Label(root,
+                           text="5000",
+                           font="16"
+                           )
+message_perks_5000.place(x=root_w - btn_buy2_w * 3 // 2,
+                         y=btn_buy1_h * 4,
+                         height=btn_buy2_h,
+                         width=btn_buy2_w / 2
+                         )
+# отображение "statistic"
+message_stats = Label(root,
+                      text="Stats:",
+                      font="16"
+                      )
+message_stats.place(x=0,
+                    y=0,
+                    height=btn_buy2_h,
+                    width=btn_buy2_w * 3 // 2
+                    )
+# отображение "total clicks"
+message_total = Label(root,
+                      text="Total clicks: {}".format(total),
+                      font="16"
+                      )
+message_total.place(x=0,
+                    y=btn_buy1_h,
+                    height=btn_buy2_h / 2,
+                    width=btn_buy2_w * 3 // 2
+                    )
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
 
@@ -240,9 +324,10 @@ while True:
         cnt_mes -= 1
     cnt += 1
     count_clicks.config(text="{}".format(round(clicks, 2)))
+    message_total.config(text="Total clicks: {}".format(total))
     if cnt_mes == 0:
         cnt_mes = -1
         message.config(text="")
     if cnt == 100:
         cnt = 0
-        clicks += buy_3 * 0.1 + buy_4
+        clicks += buy[3] * const_buy + buy[4]
