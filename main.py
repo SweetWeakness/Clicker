@@ -27,7 +27,7 @@ def click():
     global clicks, buy, total
     total += 1
     clicks += 1 + buy[1] * const_buy + buy[2]
-    count_clicks.config(text="{}".format(round(clicks, 2)))
+    clicks_cnt.config(text="{}".format(round(clicks, 2)))
     message.config(text="")
 
 
@@ -37,8 +37,9 @@ def add1():
     if clicks >= 20:
         buy[1] += 1
         dlt(20)
-        count_clicks.config(text="{}".format(round(clicks, 1)))
-        message_speed.config(text="+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
+        clicks_cnt.config(text="{}".format(round(clicks, 1)))
+        auto_speed.config(text=
+                          "+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
         message.config(text="Thank you!")
     else:
         message.config(text="Not enough clicks")
@@ -51,7 +52,8 @@ def add2():
         buy[2] += 1
         dlt(120)
         message.config(text="Thank you!")
-        message_speed.config(text="+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
+        auto_speed.config(text=
+                          "+{}".format(round(1 + buy[1] * const_buy + buy[2], 1)))
     else:
         message.config(text="Not enough clicks")
 
@@ -63,7 +65,8 @@ def add3():
         buy[3] += 1
         dlt(300)
         message.config(text="Thank you!")
-        mes_auto.config(text="+{}".format(round(buy[3] * const_buy + buy[4], 1)))
+        mes_auto.config(text=
+                        "+{}".format(round(buy[3] * const_buy + buy[4], 1)))
     else:
         message.config(text="Not enough clicks")
 
@@ -75,7 +78,8 @@ def add4():
         buy[4] += 1
         dlt(5000)
         message.config(text="Thank you!")
-        mes_auto.config(text="+{}".format(round(buy[3] * const_buy + buy[4], 1)))
+        mes_auto.config(text=
+                        "+{}".format(round(buy[3] * const_buy + buy[4], 1)))
     else:
         message.config(text="Not enough clicks")
 
@@ -149,47 +153,31 @@ btn_buy4 = new_button("buy +1 autoclick", "#CA901B", "#000000", add4)
 button_place(btn_buy4, btn_buy_x, btn_buy_h * 4, btn_buy_h, btn_buy_w)
 
 # отображение кол-ва кликов
-count_clicks = Label(root,
-                     font="16",
-                     text="{}".format(round(clicks, 2))
-                     )
-count_clicks.place(x=click_x,
-                   y=int((root_h - btn_click_h) * 7 / 20),
-                   height=int((root_h - btn_click_h) / 10),
-                   width=btn_click_w
-                   )
+clicks_cnt = Label(root)
+new_message(clicks_cnt, "{}".format(round(clicks, 2)),
+            click_x, int((root_h - btn_click_h) * 7 / 20),
+            int((root_h - btn_click_h) / 10), btn_click_w)
+
 # отображение сообщения для пользователя
-message = Label(root,
-                font="16"
-                )
-message.place(x=click_x,
-              y=int((root_h - btn_click_h) * 5 / 20),
-              height=int((root_h - btn_click_h) / 10),
-              width=btn_click_w
-              )
+message = Label(root)
+new_message(message, "", click_x, int((root_h - btn_click_h) * 5 / 20),
+            int((root_h - btn_click_h) / 10), btn_click_w)
+
 # отображение скорости нажатия
-message_speed = Label(root,
-                      text="+{}".format(round(buy[1] * const_buy + buy[2] + 1, 1)),
-                      font="16"
-                      )
-message_speed.place(x=click_x,
-                    y=int((root_h - btn_click_h) * 13 / 20 + btn_click_h),
-                    height=int((root_h - btn_click_h) / 10),
-                    width=btn_click_w
-                    )
-# отображение сообщения о скорости нажатия
-message_speed_about = Label(root,
-                            text="1 click gives you:",
-                            font="16"
-                            )
-message_speed_about.place(x=click_x,
-                          y=int((root_h - btn_click_h) * 11 / 20 + btn_click_h),
-                          height=int((root_h - btn_click_h) / 10),
-                          width=btn_click_w
-                          )
+auto_speed = Label(root)
+new_message(auto_speed, "+{}".format(round(buy[1] * const_buy + buy[2] + 1, 1)),
+            click_x, int((root_h - btn_click_h) * 13 / 20 + btn_click_h),
+            int((root_h - btn_click_h) / 10), btn_click_w)
+
 
 # отображение сообщения о скорости нажатия
-new_message(Label(root), "1 click gives you:",
+mes_speed = Label(root)
+new_message(mes_speed, "1 click gives you:", click_x,
+            int((root_h - btn_click_h) * 11 / 20 + btn_click_h),
+            int((root_h - btn_click_h) / 10), btn_click_w)
+
+# отображение сообщения о скорости нажатия
+new_message(Label(root), "and auto:",
             click_x, int((root_h - btn_click_h) * 15 / 20 + btn_click_h),
             int((root_h - btn_click_h) / 10), btn_click_w)
 
@@ -226,7 +214,7 @@ while True:
     if cnt_mes > 0:
         cnt_mes -= 1
     cnt += 1
-    count_clicks.config(text="{}".format(round(clicks, 2)))
+    clicks_cnt.config(text="{}".format(round(clicks, 2)))
     mes_total.config(text="Total clicks: {}".format(total))
     if cnt_mes == 0:
         cnt_mes = -1
